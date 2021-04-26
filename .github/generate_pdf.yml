@@ -1,0 +1,65 @@
+# This workflow will create the pdf and releases it
+
+name: Generate PDF
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  # If previous build is still running this will cancel it.  
+  cancel_previous_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+   
+   
+  generate:
+    runs-on: ubuntu-latest
+    
+    # If build doesn't succed in 10 minutes there must be something wrong. I guess.
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run latexmk
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: master.tex
+
+      - name: Get current date
+        id: date
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 1
+          format: 'YYYY-MM-DD'
+        
+      - name: Get current time
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 1
+          format: 'HH:mm'
+          
+      - name: Upload master.pdf as release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: master.pdf
+          asset_name: "${{ steps.date.outputs.time }}_${{ github.event.repository.name }}.pdf"
+          tag: ${{ github.ref }}
+          release_name: "Release ${{ steps.date.outputs.time }} at ${{ steps.time.outputs.time }}"
+          overwrite: true
+          body: "Generated master.pdf @ ${{ steps.date.outputs.time }} ${{ steps.time.outputs.time }}."

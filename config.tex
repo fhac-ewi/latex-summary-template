@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Pakete
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[ngerman]{babel} % Sprache deutsch
+\usepackage{geometry} % Layout Geometrie
+\usepackage[export]{adjustbox} % loads also graphicx
+\usepackage[section]{placeins} % Floating
+\usepackage{titleps} % Layout
+
+% Notizen (zum Deaktivieren [disable])
+\usepackage[textwidth=25mm,textsize=footnotesize]{todonotes}
+\setlength\marginparwidth{1in}
+
+
+% Schriftart
+\usepackage{charter}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Style
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpagestyle{ruled}
+{\sethead{\modulname}{- \thepage\space -}{Zusammenfassung}\headrule}
+\pagestyle{ruled}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Befehle
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\vorlesung}[2]{
+  \section{#1}
+  {\small \textit{Vorlesung vom #2.}}\\[0.4cm]
+}
+
+\newcommand{\image}[2]{
+  \begin{figure}[!htp]
+    \centering
+    \includegraphics[max height=19cm,max width=0.9\textwidth,keepaspectratio]{images/#1}
+    \caption{#2}
+    \label{image:#1}
+  \end{figure}
+  \FloatBarrier
+} % Beispiel: \image{Funny.PNG}{Dies ist eine Beschreibung}
