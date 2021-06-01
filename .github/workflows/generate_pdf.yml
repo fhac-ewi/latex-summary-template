@@ -51,15 +51,22 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 1
-          format: 'HH:mm'
+          format: 'HH-mm'
+          
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: "d${{ steps.date.outputs.time }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Upload master.pdf as release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: master.pdf
-          asset_name: "${{ steps.date.outputs.time }}_${{ github.event.repository.name }}.pdf"
-          tag: ${{ github.ref }}
-          release_name: "Release ${{ steps.date.outputs.time }} at ${{ steps.time.outputs.time }}"
+          asset_name: "${{ steps.date.outputs.time }}_${{ steps.time.outputs.time }}_${{ github.event.repository.name }}.pdf"
+          tag:  "d${{ steps.date.outputs.time }}"
+          release_name: "PDF @ ${{ steps.date.outputs.time }}"
           overwrite: true
-          body: "Generated master.pdf @ ${{ steps.date.outputs.time }} ${{ steps.time.outputs.time }}."
+          body: "Generated master.pdf from ${{ steps.date.outputs.time }}."
